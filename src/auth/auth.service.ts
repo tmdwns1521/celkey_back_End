@@ -13,7 +13,7 @@ export class AuthService {
       const response = await axios.post('https://kauth.kakao.com/oauth/token', {
         grant_type: 'authorization_code',
         client_id: this.configService.get<string>('KAKAO_CLIENT_ID'),
-        client_secret: this.configService.get<string>('YOUR_KAKAO_CLIENT_SECRET'),
+        client_secret: this.configService.get<string>('KAKAO_CLIENT_SECRET'),
         redirect_uri: 'http://localhost:3000/auth/kakao/callback',
         code: code,
       })

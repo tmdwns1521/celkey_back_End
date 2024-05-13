@@ -14,7 +14,6 @@ export class AuthController {
   @Get('kakao/access-token')
   @UseGuards(AuthGuard('kakao'))
   async kakaoAuthCallback(@Query('code') code: string) {
-    console.log(code);
     const accessToken: string = await this.authService.getAccessToken(code);
 
     return { accessToken };
