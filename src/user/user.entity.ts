@@ -11,6 +11,9 @@ export class User {
   @Column({ unique: true })
   email: string;
 
+  @Column({ default: 0 })
+  level: number;
+
   @Column({ unique: true, default: '' })
   refreshToken: string;
 }
