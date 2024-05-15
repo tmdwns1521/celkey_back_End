@@ -27,6 +27,7 @@ export class AuthMiddleware implements NestMiddleware {
       // 유효한 경우 다음 미들웨어 실행
       next();
     } catch (error) {
+      console.log('error ::: ', error);
       // 검증 중 에러가 발생한 경우 에러 응답 반환
       return res.status(500).json({ message: '서버 오류' });
     }
