@@ -1,9 +1,11 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
+  constructor(private readonly configService: ConfigService) {}
   use(req: Request, res: Response, next: NextFunction) {
     // 요청 헤더에서 AccessToken을 추출
     const accessToken = req.headers.authorization?.split(' ')[1];
@@ -15,7 +17,10 @@ export class AuthMiddleware implements NestMiddleware {
 
     try {
       // AccessToken의 유효성 검사
-      const decodedToken = jwt.verify(accessToken, 'your-secret-key');
+      const decodedToken = jwt.verify(
+        accessToken,
+        this.configService.get<string>('JWT_SECRET'),
+      );
 
       // 유효하지 않은 경우 에러 응답 반환
       if (!decodedToken) {
