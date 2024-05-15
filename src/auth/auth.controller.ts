@@ -24,6 +24,6 @@ export class AuthController {
   async kakaoAuthCallback(@Req() req: Request, @Res() res: Response) {
     const tokens = await this.authService.validateOAuthLogin(req);
     console.log('tokens ::: ', tokens);
-    return tokens;
+    res.json(tokens);
   }
 }
