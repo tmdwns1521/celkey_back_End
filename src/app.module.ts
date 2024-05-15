@@ -6,7 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { User } from './user/user.entity';
-import { AuthMiddleware } from "./middlewares/auth.middleware";
+import { AuthMiddleware } from './middlewares/auth.middleware';
 
 @Module({
   imports: [
@@ -33,6 +33,6 @@ import { AuthMiddleware } from "./middlewares/auth.middleware";
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).exclude('/auth/kakao').forRoutes('*');
+    consumer.apply(AuthMiddleware).exclude('/auth/kakao', '/auth/kakao/callback').forRoutes('*');
   }
 }
