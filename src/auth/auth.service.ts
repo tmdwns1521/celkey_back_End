@@ -11,10 +11,16 @@ export class AuthService {
 
   async validateOAuthLogin(profile: any): Promise<string> {
     const user = await this.userService.findOrCreate(profile.user);
+    console.log("user ::: ", user);
 
     const payload = { id: user.id, email: user.email };
+    console.log("payload ::: ", payload)
+
     const accessToken = this.jwtService.sign(payload);
+    console.log("accessToken ::: ", accessToken);
+
     const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
+    console.log("refreshToken ::: ", refreshToken);
 
     await this.userService.saveRefreshToken(user.id, refreshToken);
 

@@ -12,19 +12,21 @@ export class UserService {
   }
 
   async findOrCreate(profile: any): Promise<User> {
-    let user = await this.userRepository.findOne({ where: { kakaoId: profile.kakaoId } });
+    console.log('profile :: ', profile);
+    let user = await this.userRepository.findOne({ where: { kakaoId: profile.user.kakaoId } });
     if (!user) {
-      user = this.userRepository.create({ kakaoId: profile.kakaoId, email: profile.email });
+      user = this.userRepository.create({ kakaoId: profile.user.kakaoId, email: profile.user.email });
       await this.userRepository.save(user);
     }
     return user;
   }
 
-  async saveRefreshToken(userId: string, refreshToken: string): Promise<void> {
+  async saveRefreshToken(userId: number, refreshToken: string): Promise<void> {
     await this.userRepository.update(userId, { refreshToken });
   }
 
   async getRefreshToken(userId: string): Promise<string> {
+    // @ts-ignore
     const user = await this.userRepository.findOne(userId);
     return user?.refreshToken;
   }
