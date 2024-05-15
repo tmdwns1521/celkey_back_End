@@ -33,6 +33,6 @@ import { AuthMiddleware } from "./middlewares/auth.middleware";
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).exclude('/auth/*').forRoutes('*');
+    consumer.apply(AuthMiddleware).exclude('/auth/kakao').forRoutes('*');
   }
 }
