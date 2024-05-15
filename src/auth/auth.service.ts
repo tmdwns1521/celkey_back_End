@@ -9,22 +9,22 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
-  async validateOAuthLogin(profile: any): Promise<string> {
+  async validateOAuthLogin(profile: any): Promise<any> {
     const user = await this.userService.findOrCreate(profile.user);
-    console.log("user ::: ", user);
+    console.log('user ::: ', user);
 
     const payload = { id: user.id, email: user.email };
-    console.log("payload ::: ", payload)
+    console.log('payload ::: ', payload);
 
     const accessToken = this.jwtService.sign(payload);
-    console.log("accessToken ::: ", accessToken);
+    console.log('accessToken ::: ', accessToken);
 
     const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
-    console.log("refreshToken ::: ", refreshToken);
+    console.log('refreshToken ::: ', refreshToken);
 
     await this.userService.saveRefreshToken(user.id, refreshToken);
 
-    return accessToken;
+    return { accessToken, refreshToken };
   }
 
   async getRefreshToken(userId: any): Promise<string> {

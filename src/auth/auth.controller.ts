@@ -22,6 +22,8 @@ export class AuthController {
   @Get('kakao/callback')
   @UseGuards(AuthGuard('kakao'))
   async kakaoAuthCallback(@Req() req: Request, @Res() res: Response) {
-    return await this.authService.validateOAuthLogin(req);
+    const tokens = await this.authService.validateOAuthLogin(req);
+    console.log('tokens ::: ', tokens);
+    return tokens;
   }
 }
