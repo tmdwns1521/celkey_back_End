@@ -1,7 +1,7 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { AuthService } from './auth.service';
-import { Request, Response } from 'express';
+import { Controller, Get, Req, Res, UseGuards } from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
+import { AuthService } from "./auth.service";
+import { Request, Response } from "express";
 
 @Controller('auth')
 export class AuthController {
@@ -22,7 +22,6 @@ export class AuthController {
   @Get('kakao/callback')
   @UseGuards(AuthGuard('kakao'))
   async kakaoAuthCallback(@Req() req: Request, @Res() res: Response) {
-    const accessToken = await this.authService.validateOAuthLogin(req);
-    return res.json(accessToken);
+    return await this.authService.validateOAuthLogin(req);
   }
 }
