@@ -7,7 +7,6 @@ import { AuthService } from './auth.service';
 import { PassportModule } from '@nestjs/passport';
 import { UserModule } from '../user/user.module';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot(),

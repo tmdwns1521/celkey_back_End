@@ -28,8 +28,15 @@ export class AuthController {
 
   @Post('kakao/refresh-token')
   async kakaoAuthRefreshToken(@Req() req: Request, @Res() res: Response) {
-    const tokens = await this.authService.validateOAuthLogin(req);
-    console.log('tokens ::: ', tokens);
-    res.json(tokens);
+    const { accessToken, refreshToken } =
+      await this.authService.validateOAuthLogin(req);
+
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+    });
+
+    res.json({ accessToken });
   }
 }
