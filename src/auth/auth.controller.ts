@@ -22,14 +22,7 @@ export class AuthController {
   @Get('kakao/callback')
   @UseGuards(AuthGuard('kakao'))
   async kakaoAuthCallback(@Req() req: Request, @Res() res: Response) {
-    const tokens = await this.authService.validateOAuthLogin(req);
-    res.json(tokens);
-  }
-
-  @Post('kakao/refresh-token')
-  async kakaoAuthRefreshToken(@Req() req: Request, @Res() res: Response) {
-    const { accessToken, refreshToken } =
-      await this.authService.validateOAuthLogin(req);
+    const { accessToken, refreshToken } = await this.authService.validateOAuthLogin(req);
 
     // secure는 https일때만 가능
     res.cookie('refreshToken', refreshToken, {
@@ -37,6 +30,14 @@ export class AuthController {
       secure: false,
       sameSite: 'strict',
     });
+
+    res.json({ accessToken });
+  }
+
+  @Post('kakao/refresh-token')
+  async kakaoAuthRefreshToken(@Req() req: Request, @Res() res: Response) {
+    const { accessToken } =
+      await this.authService.validateOAuthLogin(req);
 
     res.json({ accessToken });
   }
