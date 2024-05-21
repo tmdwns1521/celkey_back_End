@@ -7,6 +7,7 @@ import { ConfigService } from '@nestjs/config';
 export class AuthMiddleware implements NestMiddleware {
   constructor(private readonly configService: ConfigService) {}
   use(req: Request, res: Response, next: NextFunction) {
+    // todo: 블랙리스트 token 블락
     // 요청 헤더에서 AccessToken을 추출
     const accessToken = req.headers.authorization?.split(' ')[1];
 

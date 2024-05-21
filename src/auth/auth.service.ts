@@ -1,15 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { UserService } from '../user/user.service';
-import { ConfigService } from '@nestjs/config';
-import axios from 'axios';
+import { Injectable } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { UserService } from "../user/user.service";
+import { UserRepository } from "../user/user.repository";
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
+    private readonly userRepository: UserRepository,
   ) {}
 
   async validateOAuthLogin(profile: any): Promise<any> {
@@ -32,25 +31,24 @@ export class AuthService {
 
   async refreshAccessToken(refreshToken: string): Promise<any> {
     try {
-      const response = await axios.post(
-        'https://kauth.kakao.com/oauth/token',
-        {
-          grant_type: 'refresh_token',
-          client_id: this.configService.get<string>('KAKAO_CLIENT_ID'),
-          refresh_token: refreshToken,
-          client_secret: this.configService.get<string>('KAKAO_CLIENT_SECRET'),
-        },
-        {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
-          },
-        },
-      );
+      const decoded = this.jwtService.verify(refreshToken);
+      console.log('Decoded refresh token:', decoded);
 
-      console.log(response.data.access_token);
-      return response.data.access_token;
+      // Find the user by decoded token id
+      const user = await this.userRepository.findById(decoded.id);
+      console.log('user ::: ', user);
+
+      // Verify that the stored refresh token matches the provided one
+      if (user && user.refreshToken === refreshToken) {
+        // Generate a new access token
+        const payload = { id: user.id, email: user.email };
+        return this.jwtService.sign(payload, { expiresIn: '1h' });
+      } else {
+        throw new Error('Invalid refresh token');
+      }
     } catch (error) {
       console.error('Error refreshing access token:', error);
+      throw new Error('Could not refresh access token');
     }
   }
 

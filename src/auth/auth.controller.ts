@@ -38,21 +38,20 @@ export class AuthController {
   @Get('kakao/refresh-token')
   async kakaoAuthRefreshToken(@Req() req: Request, @Res() res: Response) {
     try {
-      console.log(req.cookies);
       const refreshToken = req.cookies.refreshToken;
 
       if (!refreshToken) {
         return res.status(401).json({ message: 'Refresh token not found' });
       }
 
-      const newAccessToken =
+      const accessToken =
         await this.authService.refreshAccessToken(refreshToken);
 
-      if (!newAccessToken) {
+      if (!accessToken) {
         return res.status(401).json({ message: 'Failed token not found' });
       }
 
-      return res.status(200).json({ accessToken: newAccessToken });
+      return res.status(200).json({ accessToken });
     } catch (error) {
       console.error('Error refreshing access token:', error);
       return res.status(500).json({ message: 'Internal server error' });
