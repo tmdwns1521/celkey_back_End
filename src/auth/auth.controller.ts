@@ -31,9 +31,10 @@ export class AuthController {
     const { accessToken, refreshToken } =
       await this.authService.validateOAuthLogin(req);
 
+    // secure는 https일때만 가능
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      secure: true,
+      secure: false,
       sameSite: 'strict',
     });
 
