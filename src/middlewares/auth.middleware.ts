@@ -12,7 +12,7 @@ export class AuthMiddleware implements NestMiddleware {
     const accessToken = req.headers.authorization?.split(' ')[1];
 
     // AccessToken이 없는 경우 또는 형식이 올바르지 않은 경우 에러 응답 반환
-    if (!accessToken) {
+    if (!accessToken || String(accessToken) === 'undefined') {
       return res.status(401).json({ message: 'AccessToken이 없습니다.' });
     }
 
