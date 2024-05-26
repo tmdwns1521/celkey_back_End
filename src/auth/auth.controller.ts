@@ -35,6 +35,17 @@ export class AuthController {
     res.json({ accessToken });
   }
 
+  @Post('logout')
+  async logout(@Res() res: Response) {
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'strict',
+    });
+
+    return res.status(200).json({ message: 'logged out successfully.' });
+  }
+
   @Get('kakao/refresh-token')
   async kakaoAuthRefreshToken(@Req() req: Request, @Res() res: Response) {
     try {

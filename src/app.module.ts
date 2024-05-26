@@ -7,6 +7,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { User } from './user/user.entity';
 import { AuthMiddleware } from './middlewares/auth.middleware';
+import { BlogModule } from './blog/blog.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { AuthMiddleware } from './middlewares/auth.middleware';
     }),
     AuthModule,
     UserModule,
+    BlogModule,
   ],
   controllers: [AppController],
   providers: [AppService],
