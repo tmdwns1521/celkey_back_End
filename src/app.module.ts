@@ -40,6 +40,10 @@ export class AppModule implements NestModule {
       .exclude(
         '/auth/kakao',
         '/auth/kakao/callback',
+        '/auth/naver',
+        '/auth/naver/callback',
+        '/auth/google',
+        '/auth/google/callback',
         '/auth/kakao/refresh-token',
       )
       .forRoutes('*');
