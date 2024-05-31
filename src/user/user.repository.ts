@@ -7,26 +7,36 @@ import { User } from './user.entity';
 export class UserRepository {
   constructor(
     @InjectRepository(User)
-    private readonly repository: Repository<User>,
+    private readonly userRepository: Repository<User>,
   ) {}
 
-  async findByKakaoId(kakaoId: string): Promise<User | undefined> {
-    return this.repository.findOne({ where: { kakaoId } });
-  }
-
-  async createUser(userData: Partial<User>): Promise<User> {
-    const user = this.repository.create(userData);
-    return this.repository.save(user);
+  async createUser(userData: User, platform: string): Promise<User> {
+    const newUser = {
+      nickname: userData.nickname,
+      email: userData.email,
+      profileImage: userData.profileImage,
+      platform: platform,
+    };
+    const user = this.userRepository.create(newUser);
+    return this.userRepository.save(user);
   }
 
   async updateRefreshToken(
     userId: number,
     refreshToken: string,
   ): Promise<void> {
-    await this.repository.update(userId, { refreshToken });
+    await this.userRepository.update(userId, { refreshToken });
   }
 
-  async findById(userId: number): Promise<User | undefined> {
-    return this.repository.findOne({ where: { id: userId } });
+  async findById(
+    email: string,
+    platformName: string,
+  ): Promise<User | undefined> {
+    return await this.userRepository.findOne({
+      where: {
+        email: email,
+        platform: platformName,
+      },
+    });
   }
 }

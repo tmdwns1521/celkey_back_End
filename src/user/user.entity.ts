@@ -1,19 +1,33 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
-  kakaoId: string;
+  @Column({ type: 'varchar', length: 30 })
+  nickname: string;
 
-  @Column({ unique: true })
+  @Column({ type: 'varchar', length: 30 })
   email: string;
 
-  @Column({ default: 0 })
-  level: number;
+  @Column({ type: 'varchar', length: 30, default: '', nullable: true })
+  password: string;
 
-  @Column({ unique: true, default: '' })
+  @Column({ type: 'text' })
+  profileImage: string;
+
+  @Column({ type: 'varchar', length: 10 })
+  platform: string;
+
+  @Column({ type: 'varchar', length: 255, default: '', nullable: true })
   refreshToken: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }

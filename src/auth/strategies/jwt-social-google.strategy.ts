@@ -1,49 +1,44 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Profile, Strategy, VerifyCallback } from 'passport-google-oauth20';
+import { Strategy, VerifyCallback } from 'passport-google-oauth20';
 import { ConfigService } from '@nestjs/config';
+import { AuthService } from '../auth.service';
 
 @Injectable()
-export class JwtGoogleStrategy extends PassportStrategy(Strategy, 'google') {
-  //UseGuards의 이름과 동일해야함
-  constructor(private readonly configService: ConfigService) {
-    // console.log(configService)
+export class JwtSocialGoogleStrategy extends PassportStrategy(
+  Strategy,
+  'google',
+) {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly authService: AuthService,
+  ) {
     super({
-      //자식의 constructor를 부모의 constructor에 넘기는 방법은 super를 사용하면 된다.
-      clientID: configService.get('GOOGLE_ID'), //.env파일에 들어있음
-      clientSecret: configService.get('GOOGLE_SECRET'), //.env파일에 들어있음
-      callbackURL: 'http://localhost:3456/auth/google/callback', //.env파일에 들어있음
+      clientID: configService.get<string>('GOOGLE_CLIENT_ID'),
+      clientSecret: configService.get<string>('GOOGLE_CLIENT_SECRET'),
+      callbackURL: configService.get<string>('GOOGLE_CALLBACK_URL'),
       scope: ['email', 'profile'],
     });
-  }
-
-  authorizationParams(): { [key: string]: string } {
-    return {
-      access_type: 'offline',
-      prompt: 'consent',
-    };
   }
 
   async validate(
     accessToken: string,
     refreshToken: string,
-    profile: Profile,
+    profile: any,
     done: VerifyCallback,
-  ) {
-    console.log('success');
-    console.log(accessToken);
-    console.log(refreshToken);
-    try {
-      const { name, emails, photos } = profile;
-      const user = {
-        email: emails[0].value,
-        firstName: name.familyName,
-        lastName: name.givenName,
-        photo: photos[0].value,
-      };
-      done(null, user);
-    } catch (error) {
-      done(error);
-    }
+  ): Promise<any> {
+    const { id, displayName, emails, photos } = profile;
+    const user = {
+      googleId: id,
+      email: emails[0].value,
+      nickname: displayName,
+      profileImage: photos[0].value,
+      accessToken,
+    };
+    const payload = {
+      user,
+      accessToken,
+    };
+    done(null, payload);
   }
 }

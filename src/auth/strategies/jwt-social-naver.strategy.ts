@@ -2,14 +2,21 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Profile, Strategy } from 'passport-naver';
 import { ConfigService } from '@nestjs/config';
+import { AuthService } from '../auth.service';
 
 @Injectable()
-export class JwtNaverStrategy extends PassportStrategy(Strategy, 'naver') {
-  constructor(private readonly configService: ConfigService) {
+export class JwtSocialNaverStrategy extends PassportStrategy(
+  Strategy,
+  'naver',
+) {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly authService: AuthService,
+  ) {
     super({
-      clientID: configService.get('NAVER_ID'), //.env파일에 들어있음
-      clientSecret: configService.get('NAVER_SECRET'), //.env파일에 들어있음
-      callbackURL: 'http://localhost:3456/auth/naver/callback', //.env파일에 들어있음
+      clientID: configService.get<string>('NAVER_CLIENT_ID'),
+      clientSecret: configService.get<string>('NAVER_CLIENT_SECRET'),
+      callbackURL: configService.get<string>('NAVER_CALLBACK_URL'),
     });
   }
 
@@ -17,19 +24,19 @@ export class JwtNaverStrategy extends PassportStrategy(Strategy, 'naver') {
     accessToken: string,
     refreshToken: string,
     profile: Profile,
-    done: (error: any, user?: any, info?: any) => void,
-  ) {
-    try {
-      console.log(profile);
-      const { _json } = profile;
-      const user = {
-        email: _json.email,
-        nickname: _json.nickname,
-        photo: _json.profile_image,
-      };
-      done(null, user);
-    } catch (error) {
-      done(error);
-    }
+    done: (error: any, user?: any) => void,
+  ): Promise<any> {
+    const { _json } = profile;
+    console.log(profile);
+    const user = {
+      email: _json.email,
+      nickname: _json.nickname,
+      profileImage: _json.profile_image,
+    };
+    const payload = {
+      user,
+      accessToken,
+    };
+    done(null, payload);
   }
 }

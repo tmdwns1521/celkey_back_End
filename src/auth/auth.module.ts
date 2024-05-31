@@ -6,6 +6,8 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { PassportModule } from '@nestjs/passport';
 import { UserModule } from '../user/user.module';
+import { JwtSocialNaverStrategy } from './strategies/jwt-social-naver.strategy';
+import { JwtSocialGoogleStrategy } from './strategies/jwt-social-google.strategy';
 
 @Module({
   imports: [
@@ -21,7 +23,12 @@ import { UserModule } from '../user/user.module';
     }),
     UserModule,
   ],
-  providers: [AuthService, JwtSocialKakaoStrategy],
+  providers: [
+    AuthService,
+    JwtSocialKakaoStrategy,
+    JwtSocialNaverStrategy,
+    JwtSocialGoogleStrategy,
+  ],
   controllers: [AuthController],
 })
 export class AuthModule {}
