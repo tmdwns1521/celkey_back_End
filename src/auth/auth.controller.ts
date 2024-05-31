@@ -113,26 +113,26 @@ export class AuthController {
     return res.status(200).json({ message: 'logged out successfully.' });
   }
 
-  // @Get('kakao/refresh-token')
-  // async kakaoAuthRefreshToken(@Req() req: Request, @Res() res: Response) {
-  //   try {
-  //     const refreshToken = req.cookies.refreshToken;
-  //
-  //     if (!refreshToken) {
-  //       return res.status(401).json({ message: 'Refresh token not found' });
-  //     }
-  //
-  //     const accessToken =
-  //       await this.authService.refreshAccessToken(refreshToken);
-  //
-  //     if (!accessToken) {
-  //       return res.status(401).json({ message: 'Failed token not found' });
-  //     }
-  //
-  //     return res.status(200).json({ accessToken });
-  //   } catch (error) {
-  //     console.error('Error refreshing access token:', error);
-  //     return res.status(500).json({ message: 'Internal server error' });
-  //   }
-  // }
+  @Get('kakao/refresh-token')
+  async kakaoAuthRefreshToken(@Req() req: Request, @Res() res: Response) {
+    try {
+      const refreshToken = req.cookies.refreshToken;
+
+      if (!refreshToken) {
+        return res.status(401).json({ message: 'Refresh token not found' });
+      }
+
+      const accessToken =
+        await this.authService.refreshAccessToken(refreshToken);
+
+      if (!accessToken) {
+        return res.status(401).json({ message: 'Failed token not found' });
+      }
+
+      return res.status(200).json({ accessToken });
+    } catch (error) {
+      console.error('Error refreshing access token:', error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  }
 }

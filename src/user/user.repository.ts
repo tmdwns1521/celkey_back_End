@@ -28,7 +28,7 @@ export class UserRepository {
     await this.userRepository.update(userId, { refreshToken });
   }
 
-  async findById(
+  async findOne(
     email: string,
     platformName: string,
   ): Promise<User | undefined> {
@@ -36,6 +36,14 @@ export class UserRepository {
       where: {
         email: email,
         platform: platformName,
+      },
+    });
+  }
+
+  async findById(userId: number): Promise<User | undefined> {
+    return await this.userRepository.findOne({
+      where: {
+        id: userId,
       },
     });
   }

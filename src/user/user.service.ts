@@ -8,7 +8,7 @@ export class UserService {
 
   async findOrCreate(profile: any, platform: string): Promise<User> {
     console.log('profile :: ', profile);
-    let user: User = await this.userRepository.findById(
+    let user: User = await this.userRepository.findOne(
       profile.user.email,
       platform,
     );
@@ -22,8 +22,8 @@ export class UserService {
     await this.userRepository.updateRefreshToken(userId, refreshToken);
   }
 
-  // async getRefreshToken(userId: number): Promise<string> {
-  //   const user = await this.userRepository.findById(userId);
-  //   return user?.refreshToken;
-  // }
+  async getRefreshToken(userId: number): Promise<string> {
+    const user = await this.userRepository.findById(userId);
+    return user?.refreshToken;
+  }
 }
