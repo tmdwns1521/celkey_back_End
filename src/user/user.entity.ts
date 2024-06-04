@@ -19,8 +19,8 @@ export class User {
   @Column({ type: 'varchar', length: 30, default: '', nullable: true })
   password: string;
 
-  @Column({ type: 'text' })
-  profileImage: string;
+  @Column({ type: 'text', nullable: false })
+  profileImage: string = '';
 
   @Column({ type: 'varchar', length: 10 })
   platform: string;

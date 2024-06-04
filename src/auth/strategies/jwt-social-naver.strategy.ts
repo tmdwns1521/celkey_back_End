@@ -5,14 +5,8 @@ import { ConfigService } from '@nestjs/config';
 import { AuthService } from '../auth.service';
 
 @Injectable()
-export class JwtSocialNaverStrategy extends PassportStrategy(
-  Strategy,
-  'naver',
-) {
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly authService: AuthService,
-  ) {
+export class JwtSocialNaverStrategy extends PassportStrategy(Strategy, 'naver') {
+  constructor(private readonly configService: ConfigService, private readonly authService: AuthService) {
     super({
       clientID: configService.get<string>('NAVER_CLIENT_ID'),
       clientSecret: configService.get<string>('NAVER_CLIENT_SECRET'),

@@ -24,6 +24,7 @@ import { BlogModule } from './blog/blog.module';
         database: configService.get<string>('DB_NAME'),
         entities: [User],
         synchronize: true,
+        charset: 'utf8mb4',
       }),
     }),
     AuthModule,
